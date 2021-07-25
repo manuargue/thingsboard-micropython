@@ -1,0 +1,7 @@
+/build/
+/dist/
+/thingsboard_micropython.egg-info/
+/venv/
+/__pycache__/
+*code-workspace
+MANIFEST
