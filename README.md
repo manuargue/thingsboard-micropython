@@ -2,7 +2,7 @@
 
 This project is a MicroPython library that provides an client for the [Device](https://thingsboard.io/docs/reference/mqtt-api/) API of [ThingsBoard](https://thingsboard.io/) open-source IoT Platform.
 
-The library consists of a thin wrapper around the MicroPython MQTT module, [mqtt.robust](https://github.com/micropython/micropython-lib/blob/master/micropython/umqtt.robust/umqtt/robust.py).
+The library consists of a thin wrapper around the MicroPython MQTT module, [umqtt.robust](https://github.com/micropython/micropython-lib/blob/master/micropython/umqtt.robust/umqtt/robust.py).
 
 ## Installation
 
@@ -20,9 +20,10 @@ Client initialization and telemetry publishing:
 ```python
 from uthingsboard.client import TBDeviceMqttClient
 
-client = TBDeviceMqttClient('test01', '127.0.0.1', user='test01', password='test01')
+# See examples for more authentication options
+client = TBDeviceMqttClient('demo.thingsboard.io', access_token='test01')
 
-# Connect to ThingsBoard
+# Connecting to ThingsBoard
 client.connect()
 
 # Sending telemetry
@@ -32,7 +33,7 @@ client.send_telemetry(telemetry)
 # Checking for incoming subscriptions or RPC call requests (non-blocking)
 client.check_msg()
 
-# Disconnect from ThingsBoard
+# Disconnecting from ThingsBoard
 client.disconnect()
 ```
 
@@ -42,8 +43,8 @@ More examples can be found in [examples](https://github.com/coredumplabs/thingsb
 
 ## Support
 
-- QoS 0 and 1 as supported by the backend MQTT library, [mqtt.robust](https://github.com/micropython/micropython-lib/blob/master/micropython/umqtt.robust/umqtt/robust.py).
-- All [Device](https://thingsboard.io/docs/reference/mqtt-api/), except Provisioning.
+- SSL and QoS (0 or 1) as supported by the backend MQTT library, [umqtt.robust](https://github.com/micropython/micropython-lib/blob/master/micropython/umqtt.robust/umqtt/robust.py).
+- All [Device](https://thingsboard.io/docs/reference/mqtt-api/) API's, except Provisioning.
 - Tested only on ESP32 board running MicroPython v1.16 generic.
 
 ## Acknowledgment

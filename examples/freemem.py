@@ -9,7 +9,7 @@ from uthingsboard.client import TBDeviceMqttClient
 
 
 telemetry_interval = 5
-client = TBDeviceMqttClient('test01', '127.0.0.1')
+client = TBDeviceMqttClient('127.0.0.1', access_token='test01')
 
 
 # this callback changes global variable defining how often telemetry is sent

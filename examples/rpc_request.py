@@ -10,7 +10,7 @@ def callback(resp_id, data):
 
 
 def main():
-    client = TBDeviceMqttClient('test01', '127.0.0.1')
+    client = TBDeviceMqttClient('127.0.0.1', access_token='test01')
     client.connect()
 
     # call "getTime" on server and receive result, then process it on callback

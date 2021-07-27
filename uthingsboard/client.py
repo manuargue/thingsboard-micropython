@@ -23,24 +23,48 @@ class TBQoSException(Exception):
     pass
 
 
+class TBAuthException(Exception):
+    pass
+
+
 def validate_qos(qos):
     if qos not in (0, 1):
-        msg = 'Quality of service (qos) value must be 0 or 1'
-        raise TBQoSException(msg)
+        raise TBQoSException('Quality of service (qos) value must be 0 or 1')
 
 
 class TBDeviceMqttClient:
 
     DEBUG = False
 
-    def __init__(self, client_id, host, port=1883, user=None, password=None,
+    def __init__(self, host, port=1883, access_token=None, basic_auth=None,
                  keepalive=0, ssl_params=None, qos=0):
         validate_qos(qos)
+
+        # validate authentication
+        if access_token and basic_auth:
+            raise TBAuthException('Only one auth method must be provided')
+        elif access_token:
+            user = access_token
+            password = client_id = ''
+        elif basic_auth:
+            valid_keys = ('user', 'password', 'client_id')
+            if not all(k in valid_keys for k in basic_auth.keys()):
+                raise TBAuthException('valid keys are {}'.format(valid_keys))
+            elif basic_auth.get('password') and not basic_auth.get('user'):
+                raise TBAuthException('user must be provided')
+            elif not basic_auth.get('user') and not basic_auth.get('client_id'):
+                raise TBAuthException('client_id or user must be provided')
+            user = basic_auth.get('user', '')
+            password = basic_auth.get('password', '')
+            client_id = basic_auth.get('client_id', '')
+        else:
+            raise TBAuthException('At least one auth method must be provided')
+
         ssl_params = ssl_params if ssl_params else {}
-        ssl_enabled = bool(ssl_params)
         self._client = MQTTClient(client_id, host, port=port, user=user,
                                   password=password, keepalive=keepalive,
-                                  ssl=ssl_enabled, ssl_params=ssl_params)
+                                  ssl=bool(ssl_params), ssl_params=ssl_params)
+
         self._qos = qos
         self._is_connected = False
         self._attr_request_dict = {}
@@ -110,7 +134,7 @@ class TBDeviceMqttClient:
                              qos=self._qos)
 
     def set_server_side_rpc_request_handler(self, handler):
-        """TODO: handler signature is callback(req_id, method, params)"""
+        # handler signature is callback(req_id, method, params)
         self._device_on_server_side_rpc_response = handler
 
     def publish_data(self, topic, data, qos=0):
@@ -123,7 +147,7 @@ class TBDeviceMqttClient:
         return self.publish_data(TELEMETRY_TOPIC, telemetry, qos=qos)
 
     def send_attributes(self, attributes, qos=0):
-        """TODO: attributes is a string or a list of strings"""
+        # attributes is a string or a list of strings
         return self.publish_data(ATTRIBUTES_TOPIC, attributes, qos=qos)
 
     def unsubscribe_from_attribute(self, subscription_id):
@@ -138,11 +162,11 @@ class TBDeviceMqttClient:
             (k, v) for k, v in self._device_sub_dict.items() if v)
 
     def subscribe_to_all_attributes(self, callback):
-        """TODO: callback signature is callback(attributes)"""
+        # callback signature is callback(attributes)
         return self.subscribe_to_attribute('*', callback)
 
     def subscribe_to_attribute(self, key, callback):
-        """TODO: callback signature is callback(attributes)"""
+        # callback signature is callback(attributes)
         self._device_max_sub_id += 1
         if key not in self._device_sub_dict:
             self._device_sub_dict.update(
@@ -155,7 +179,7 @@ class TBDeviceMqttClient:
 
     def request_attributes(self, client_keys=None, shared_keys=None,
                            callback=None):
-        """TODO: callback signature is callback(resp_id, attributes)"""
+        # callback signature is callback(resp_id, attributes)
         if client_keys is None and shared_keys is None:
             self._log('There are no keys to request')
             return False

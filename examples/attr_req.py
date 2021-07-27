@@ -10,7 +10,7 @@ def on_attributes_change(data):
 
 
 def main():
-    client = TBDeviceMqttClient('test01', '127.0.0.1')
+    client = TBDeviceMqttClient('127.0.0.1', access_token='test01')
     client.connect()
 
     # request attributes, wait for reply and process it in the callback
