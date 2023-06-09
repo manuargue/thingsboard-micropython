@@ -2,11 +2,11 @@
     "urls": [
         [
             "uthingsboard/__init__.py",
-            "github:manuargue/thingsboard-micropython/uthingsboard/__init__.py"
+            "github:Brenden2008/thingsboard-micropython/uthingsboard/__init__.py"
         ],
         [
             "uthingsboard/client.py",
-            "github:manuargue/thingsboard-micropython/uthingsboard/client.py"
+            "github:Brenden2008/thingsboard-micropython/uthingsboard/client.py"
         ]
     ],
     "deps": [
