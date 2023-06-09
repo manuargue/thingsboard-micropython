@@ -1,0 +1,15 @@
+{
+    "urls": [
+        [
+            "uthingsboard/__init__.py",
+            "github:manuargue/thingsboard-micropython/uthingsboard/__init__.py"
+        ],
+        [
+            "uthingsboard/client.py",
+            "github:manuargue/thingsboard-micropython/uthingsboard/client.py"
+        ]
+    ],
+    "deps": [
+    ],
+    "version": "0.2.0"
+}
